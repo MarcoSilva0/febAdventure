@@ -1,20 +1,45 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useState } from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 
-export default function App() {
+import LoginScreen from './src/pages/LoginScreen';
+import HomeScreen from './src/pages/HomeScreen';
+
+const Tab = createBottomTabNavigator();
+const Stack = createStackNavigator();
+
+const App = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  const handleLogin = () => {
+    // Aqui você faria a lógica de login e, em seguida, definiria loggedIn como true
+    setLoggedIn(true);
+  };
+
+  const renderScreens = () => {
+    if (loggedIn) {
+      return (
+        <Tab.Navigator>
+          <Tab.Screen name="Home" component={HomeScreen} />
+        </Tab.Navigator>
+      );
+    } else {
+      return (
+        <Stack.Navigator>
+          <Stack.Screen name="Login">
+            {(props) => <LoginScreen {...props} handleLogin={handleLogin} />}
+          </Stack.Screen>
+        </Stack.Navigator>
+      );
+    }
+  };
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      {renderScreens()}
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default App;
